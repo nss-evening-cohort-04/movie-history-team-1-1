@@ -45,7 +45,7 @@ function putSavedMoviesInDOM() {
     }).join('');
     console.log('savedMoviesHTML', savedMoviesHTML);
     $('#saved-movie-list').html(savedMoviesHTML);
-  }
+  });
 }
 
 $(document).ready(function() {
@@ -106,7 +106,7 @@ $(document).ready(function() {
       FbAPI.editTodo(apiKeys, itemId, editedItem).then(function(response) {
         parent.removeClass("editMode");
         console.log(response);
-        putTodoInDOM();
+        putSavedMoviesInDOM();
       });
     }
   });
