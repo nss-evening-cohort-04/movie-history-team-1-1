@@ -3,6 +3,7 @@
 
 let apiKeys = {};
 let uid = "";
+let movie = {};
 
 function createLogoutButton() {
   FbAPI.getUser(apiKeys, uid).then(function (userResponse) {
@@ -13,12 +14,51 @@ function createLogoutButton() {
   });
 }
 
+function getMovie(searchText) {
+	return new Promise((resolve, reject)=>{
+			$.ajax({
+				method:'GET',
+				url:`http://www.omdbapi.com/?t=${searchText}&y=&plot=short&r=json`
+			}).then((response)=>{
+        let searchedMovie = {
+          "name": response.Title,
+          "year": response.Year,
+          "actors": response.Actors.split(","),
+          "rating": Math.round(parseFloat(response.imdbRating) / 2)
+        };
+				resolve(searchedMovie);
+			},(errorResponse)=>{
+				reject(errorResponse);
+			});
+	});
+}
+
 $(document).ready(function() {
 
   FbAPI.firebaseCredentials().then(function (keys) {
     console.log("keys", keys);
     apiKeys = keys;
     firebase.initializeApp(apiKeys);
+  });
+
+  $('#search-btn').on('click', ()=>{
+    let searchText = $('#search-input').val();
+    getMovie(searchText).then(function (searchedMovie) {
+      console.log("searchedMovie", searchedMovie);
+      movie = searchedMovie;
+      let resultHTML = `<div>${searchedMovie.name}</div>`;
+      resultHTML += `<div>${searchedMovie.year}</div>`;
+      resultHTML += searchedMovie.actors.map((actor)=>{
+        return `<div>${actor}</div>`;
+      }).join('');
+      resultHTML += `<div>${searchedMovie.rating}</div>`;
+      $('#movie-result').append(resultHTML);
+    });
+  });
+
+  $(document).on('click', '#save-btn', ()=>{
+    movie.viewed = false;
+    FbAPI.addMovie(apiKeys, movie);
   });
 
   $('#registerButton').on('click', function () {
