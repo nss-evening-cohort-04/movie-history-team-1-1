@@ -13,19 +13,36 @@ function createLogoutButton() {
   });
 }
 
-function getMovie(searchText) {
-  return new Promise((resolve, reject) => {
-    $.ajax({method: 'GET', url: `http://www.omdbapi.com/?t=${searchText}&y=&plot=short&r=json`}).then((response) => {
-      let searchedMovie = {
-        "name": response.Title,
-        "year": response.Year,
-        "actors": response.Actors.split(","),
-        "rating": Math.round(parseFloat(response.imdbRating) / 2)
-      };
-      resolve(searchedMovie);
-    }, (errorResponse) => {
-      reject(errorResponse);
-    });
+function getSearchedMovie(searchText, searchYear, searchPage) {
+  return new Promise((resolve, reject)=>{
+      $.ajax({
+        method:'GET',
+        url:`http://www.omdbapi.com/?s=${searchText}&type=movie&y=${searchYear}&plot=short&r=json&page=${searchPage}`
+      }).then((response)=>{
+        console.log("response", response);
+        resolve(response);
+      },(errorResponse)=>{
+        reject(errorResponse);
+      });
+  });
+}
+
+function getSelectedMovie(imdbID) {
+  return new Promise((resolve, reject)=>{
+      $.ajax({
+        method:'GET',
+        url:`http://www.omdbapi.com/?i=${imdbID}&plot=short&r=json`
+      }).then((response)=>{
+        let movie = {
+          "name": response.Title,
+          "year": response.Year,
+          "actors": response.Actors.split(","),
+          "rating": Math.round(parseFloat(response.imdbRating) / 2)
+        };
+        resolve(movie);
+      },(errorResponse)=>{
+        reject(errorResponse);
+      });
   });
 }
 
@@ -58,24 +75,27 @@ $(document).ready(function() {
 
   $('#search-btn').on('click', () => {
     $('#movie-result').html('');
-    let searchText = $('#search-input').val();
-    getMovie(searchText).then(function(searchedMovie) {
+    let searchText = $('#search-title').val();
+    let searchYear = $('#search-year').val();
+    let searchPage = $('#search-page').val();
+    getSearchedMovie(searchText, searchYear, searchPage).then(function (searchedMovie) {
       console.log("searchedMovie", searchedMovie);
-      movie = searchedMovie;
-      let resultHTML = `<div>${searchedMovie.name}</div>`;
-      resultHTML += `<div>${searchedMovie.year}</div>`;
-      resultHTML += searchedMovie.actors.map((actor) => {
-        return `<div>${actor}</div>`;
-      }).join('');
-      resultHTML += `<div>${searchedMovie.rating}</div>`;
-      $('#movie-result').append(resultHTML);
+      $("#movie-result").html("");
+      $("#movie-result").append(`<div>Total results found ${searchedMovie.totalResults}, Displayed 10 items per page.`);
+      searchedMovie.Search.forEach(function(movie, index){
+        $("#movie-result").append(`<div class="img"><h3 class="caption">${movie.Title}</h3><h5>${movie.Year}</h5><img width="144" height="192" src="${movie.Poster}""></div>`)
+        .append(`<div><button id="${movie.imdbID}">Add</button></div>`);
+      });
     });
   });
 
-  $(document).on('click', '#save-btn', () => {
-    movie.viewed = false;
-    movie.uid = uid;
-    FbAPI.addMovie(apiKeys, movie);
+  $("#movie-result").on('click', 'button', (movie) => {
+    console.log("e", event.target.id);
+    getSelectedMovie(event.target.id).then(function(movie){
+      movie.viewed = false;
+      movie.uid = uid;
+      FbAPI.addMovie(apiKeys, movie);
+    });
   });
 
   $(document).on('click', '#view-saved-movies-link', (e) => {
