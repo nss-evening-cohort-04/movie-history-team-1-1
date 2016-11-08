@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>jQuery TODO</title>
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css" media="screen" title="no title">
+    <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/styles/main.css">
+  </head>
+
+  <body>
+    <div class="container col-xs-4 col-xs-offset-4" id="login-container">
+        <h1 class="form-signin-heading">Todo App</h1>
+        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+        <input type="text" id="inputUsername" class="form-control" placeholder="Username" required>
+        <button class="btn btn-lg btn-success col-xs-6" id="loginButton">Login</button>
+        <button class="btn btn-lg btn-primary col-xs-6" id="registerButton">Register</button>
+    </div>
+
+      <div class="col-xs-offset-2 col-xs-8 hide" id="movie-container">
+          <h1>Music History</h1>
+      </div>
+
+    <script src="https://www.gstatic.com/firebasejs/3.5.3/firebase.js"></script>
+    <script src="/node_modules/jquery/dist/jquery.min.js" charset="utf-8"></script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js" charset="utf-8"></script>
+    <script src="/js/firebase.js" charset="utf-8"></script>
+    <script src="/js/firebaseMethods.js" charset="utf-8"></script>
+    <script src="/js/firebaseAuth.js" charset="utf-8"></script>
+    <script src="/js/firebaseUser.js" charset="utf-8"></script>
+    <script src="/js/main.js" charset="utf-8"></script>
+  </body>
+
+</html>
