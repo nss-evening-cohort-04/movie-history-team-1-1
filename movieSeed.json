@@ -1,0 +1,36 @@
+{
+	"movies":
+	{
+		"movie01": {
+			"name": "Avatar", 
+			"year": "2009", 
+			"actors": ["Sam Worthington", "Zoe Saldana", "Sigourney Weaver", "Stephen Lang"], 
+			"rating": 4,
+			"viewed": true,
+			"uid": "feMebV436scxSROSDBPzg68HpY63"
+		},
+		"movie02": {
+			"name": "Seven Pounds",
+			"year": "2008", 
+			"actors": ["Will Smith", "Rosario Dawson", "Woody Harrelson", "Michael Ealy"], 
+			"rating": 4,
+			"viewed": false,
+			"uid": "feMebV436scxSROSDBPzg68HpY63"
+		},
+		"movie03": {
+			"name": "Forrest Gump", 
+			"year": "1994", 
+			"actors": ["Tom Hanks", " Rebecca Williams", "Sally Field", "Michael Conner Humphreys"], 
+			"rating": 4,
+			"viewed": true,
+			"uid": "feMebV436scxSROSDBPzg68HpY63"
+		}
+	},
+
+	"users":{
+    "user1":{
+			"uid": "feMebV436scxSROSDBPzg68HpY63",
+      "username": "a"
+    }
+  }
+}
