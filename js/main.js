@@ -67,6 +67,9 @@ function putSavedMoviesInDOM() {
 }
 
 function createModal(movie) {
+    if(movie.Poster === "N/A") {
+      movie.Poster = "img/no_image_available.jpg";
+    }
     let html =  '<div id="dynamicModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true">';
     html += '<div class="modal-dialog">';
     html += '<div class="modal-content">';
@@ -115,6 +118,9 @@ $(document).ready(function() {
       $("#movie-result").html("");
       $("#movie-result").append(`<div>Total results found ${searchedMovie.totalResults}, Displayed 10 items per page.`);
       searchedMovie.Search.forEach(function(movie, index){
+        if(movie.Poster === "N/A") {
+          movie.Poster = "img/no_image_available.jpg";
+        }
         $("#movie-result").append(`<div class="img"><h3 class="caption">${movie.Title}</h3><h5>${movie.Year}</h5><img width="144" height="192" src="${movie.Poster}""></div>`)
         .append(`<div><button id="${movie.imdbID}" data-toggle="modal" data-target="#myModal">More Details</button></div>`);
       });
