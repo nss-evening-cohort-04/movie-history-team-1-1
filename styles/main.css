@@ -343,3 +343,10 @@ body {
 a {
   color: #89ba2c;
   text-decoration: none; }
+
+h4 {
+  text-align: center;
+  border-top: 1px solid black; }
+
+.more-detail {
+  text-align: right; }
