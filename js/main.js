@@ -67,7 +67,6 @@ function putSavedMoviesInDOM() {
 }
 
 function createModal(movie) {
-    console.log("movie", movie);
     if(movie.Poster === "N/A") {
       movie.Poster = "img/no_image_available.jpg";
     }
