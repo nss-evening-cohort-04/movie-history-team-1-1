@@ -337,7 +337,7 @@ html, body {
 body {
   color: black;
   background: #FFF;
-  font-family: "Droid Sans";
+  font-family: "Droid Sans", sans-serif;
   font-size: 1.5em; }
 
 a {
