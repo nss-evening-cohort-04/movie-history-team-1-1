@@ -33,11 +33,13 @@ function getSelectedMovie(imdbID) {
         method:'GET',
         url:`http://www.omdbapi.com/?i=${imdbID}&plot=short&r=json`
       }).then((response)=>{
+        console.log("response", response);
         let movie = {
           "name": response.Title,
           "year": response.Year,
           "actors": response.Actors.split(","),
-          "rating": Math.round(parseFloat(response.imdbRating) / 2)
+          "rating": Math.round(parseFloat(response.imdbRating) / 2),
+          "imdbID": response.imdbID
         };
         resolve(movie);
       },(errorResponse)=>{
@@ -65,6 +67,35 @@ function putSavedMoviesInDOM() {
   });
 }
 
+function createModal(heading, formContent) {
+
+    let html =  '<div id="dynamicModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true">';
+    html += '<div class="modal-dialog">';
+    html += '<div class="modal-content">';
+    html += '<div class="modal-header">';
+    html += '<a class="close" data-dismiss="modal">×</a>';
+    html += '<h4>'+heading+'</h4>';
+    html += '</div>';
+    html += '<div class="modal-body">';
+    html += formContent;
+    html += '</div>';
+    html += '<div class="modal-footer">';
+    html += '<span class="btn btn-primary" data-dismiss="modal">Close</span>';
+    html += '</div>';  // content
+    html += '</div>';  // dialog
+    html += '</div>';  // footer
+    html += '</div>';  // modalWindow
+    $('body').append(html);
+    $("#dynamicModal").modal();
+    $("#dynamicModal").modal('show');
+
+    $('#dynamicModal').on('hidden.bs.modal', function (e) {
+        $(this).remove();
+    });
+
+}
+
+
 $(document).ready(function() {
 
   FbAPI.firebaseCredentials().then(function(keys) {
@@ -83,8 +114,11 @@ $(document).ready(function() {
       $("#movie-result").html("");
       $("#movie-result").append(`<div>Total results found ${searchedMovie.totalResults}, Displayed 10 items per page.`);
       searchedMovie.Search.forEach(function(movie, index){
+        // $("#movie-result").append(`<div class="img"><h3 class="caption">${movie.Title}</h3><h5>${movie.Year}</h5><img width="144" height="192" src="${movie.Poster}""></div>`)
+        // .append(`<div><button id="${movie.imdbID}">Add</button></div>`);
+        // JL Test
         $("#movie-result").append(`<div class="img"><h3 class="caption">${movie.Title}</h3><h5>${movie.Year}</h5><img width="144" height="192" src="${movie.Poster}""></div>`)
-        .append(`<div><button id="${movie.imdbID}">Add</button></div>`);
+        .append(`<div><button id="${movie.imdbID}" data-toggle="modal" data-target="#myModal">More Details</button></div>`);
       });
     });
   });
@@ -94,7 +128,8 @@ $(document).ready(function() {
     getSelectedMovie(event.target.id).then(function(movie){
       movie.viewed = false;
       movie.uid = uid;
-      FbAPI.addMovie(apiKeys, movie);
+      // FbAPI.addMovie(apiKeys, movie);
+      console.log("movie", movie);
     });
   });
 
@@ -151,7 +186,8 @@ $(document).ready(function() {
       uid = loginResponse.uid;
       createLogoutButton();
       $('#login-container').addClass('hide');
-      $('#movie-container').removeClass('hide');
+      $('#search').removeClass('hidden');
+
     });
   });
 
@@ -168,7 +204,8 @@ $(document).ready(function() {
       uid = loginResponse.uid;
       createLogoutButton();
       $('#login-container').addClass('hide');
-      $('#movie-container').removeClass('hide');
+      $('#movie-container').removeClass('hide'); // why hide an empty div?
+      $('#search').removeClass('hide');
     });
   });
 
