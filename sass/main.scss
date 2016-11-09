@@ -1,0 +1,32 @@
+@import "_slideout.scss";
+
+/**
+ * -------------------------------- Primary style
+ * --------------------------------
+ */
+
+*,
+*::after,
+*::before {
+  -moz-box-sizing    : border-box;
+  -webkit-box-sizing : border-box;
+  box-sizing         : border-box;
+}
+
+*::after,
+*::before {
+  content : '';
+}
+
+body {
+  color       : black;
+  background  : #FFF;
+  font-family : "Droid Sans",
+                sans-serif;
+  font-size   : 1.5em;
+}
+
+a {
+  color           : #89ba2c;
+  text-decoration : none;
+}
