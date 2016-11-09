@@ -33,14 +33,14 @@ function getSelectedMovie(imdbID) {
         method:'GET',
         url:`http://www.omdbapi.com/?i=${imdbID}&plot=short&r=json`
       }).then((response)=>{
-        console.log("response", response);
-        let movie = {
+        movie = {
           "name": response.Title,
           "year": response.Year,
           "actors": response.Actors.split(","),
           "rating": Math.round(parseFloat(response.imdbRating) / 2),
           "imdbID": response.imdbID
         };
+        createModal(response);
         resolve(movie);
       },(errorResponse)=>{
         reject(errorResponse);
@@ -62,25 +62,28 @@ function putSavedMoviesInDOM() {
       newMovieItem += '</li>';
       return newMovieItem;
     }).join('');
-    console.log('savedMoviesHTML', savedMoviesHTML);
     $('#saved-movie-list').html(savedMoviesHTML);
   });
 }
 
-function createModal(heading, formContent) {
-
+function createModal(movie) {
     let html =  '<div id="dynamicModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true">';
     html += '<div class="modal-dialog">';
     html += '<div class="modal-content">';
     html += '<div class="modal-header">';
     html += '<a class="close" data-dismiss="modal">×</a>';
-    html += '<h4>'+heading+'</h4>';
+    html += `<h4>${movie.Title}</h4>`;
     html += '</div>';
     html += '<div class="modal-body">';
-    html += formContent;
+    html += `<h6>This movie was released in ${movie.Year}</h6>`;
+    html += `<img src="${movie.Poster}" width="150px" height="150px"></img>`;
+    html += `<h6>Awards: ${movie.Awards}</h6>`;
+    html += `<h6>Notable Actors ${movie.Actors}</h6>`;
+    html += `<p>Plot: ${movie.Plot}</p>`;
+    html += `<p>IMDB Rating ${movie.imdbRating} out of 10</p>`;
     html += '</div>';
-    html += '<div class="modal-footer">';
-    html += '<span class="btn btn-primary" data-dismiss="modal">Close</span>';
+    html += '<div class="modal-footer" id="save-movie">';
+    html += `<button id="${movie.imdbID}" data-dismiss="modal">Add</button></div>`;
     html += '</div>';  // content
     html += '</div>';  // dialog
     html += '</div>';  // footer
@@ -99,7 +102,6 @@ function createModal(heading, formContent) {
 $(document).ready(function() {
 
   FbAPI.firebaseCredentials().then(function(keys) {
-    console.log("keys", keys);
     apiKeys = keys;
     firebase.initializeApp(apiKeys);
   });
@@ -110,32 +112,28 @@ $(document).ready(function() {
     let searchYear = $('#search-year').val();
     let searchPage = $('#search-page').val();
     getSearchedMovie(searchText, searchYear, searchPage).then(function (searchedMovie) {
-      console.log("searchedMovie", searchedMovie);
       $("#movie-result").html("");
       $("#movie-result").append(`<div>Total results found ${searchedMovie.totalResults}, Displayed 10 items per page.`);
       searchedMovie.Search.forEach(function(movie, index){
-        // $("#movie-result").append(`<div class="img"><h3 class="caption">${movie.Title}</h3><h5>${movie.Year}</h5><img width="144" height="192" src="${movie.Poster}""></div>`)
-        // .append(`<div><button id="${movie.imdbID}">Add</button></div>`);
-        // JL Test
         $("#movie-result").append(`<div class="img"><h3 class="caption">${movie.Title}</h3><h5>${movie.Year}</h5><img width="144" height="192" src="${movie.Poster}""></div>`)
         .append(`<div><button id="${movie.imdbID}" data-toggle="modal" data-target="#myModal">More Details</button></div>`);
       });
     });
   });
 
+  // Get more details button
   $("#movie-result").on('click', 'button', (movie) => {
-    console.log("e", event.target.id);
     getSelectedMovie(event.target.id).then(function(movie){
       movie.viewed = false;
       movie.uid = uid;
       // FbAPI.addMovie(apiKeys, movie);
-      console.log("movie", movie);
     });
   });
 
-  $(document).on('click', '#view-saved-movies-link', (e) => {
+  $(document).on('click', '#save-movie', (e) => {
     e.preventDefault();
     $('#saved-movie-list').html('');
+    FbAPI.addMovie(apiKeys, movie);
     FbAPI.getSavedMovies(apiKeys, uid).then(() => putSavedMoviesInDOM());
   });
 
@@ -160,7 +158,6 @@ $(document).ready(function() {
 
       FbAPI.editTodo(apiKeys, itemId, editedItem).then(function(response) {
         parent.removeClass("editMode");
-        console.log(response);
         putSavedMoviesInDOM();
       });
     }
@@ -200,7 +197,6 @@ $(document).ready(function() {
     };
 
     FbAPI.loginUser(user).then(function(loginResponse) {
-      console.log('loginResponse', loginResponse);
       uid = loginResponse.uid;
       createLogoutButton();
       $('#login-container').addClass('hide');
