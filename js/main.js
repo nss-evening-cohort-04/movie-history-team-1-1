@@ -259,7 +259,6 @@ $(document).ready(function() {
     });
   });
 
-
   $('#loginButton').on('click', function() {
     let email = $('#inputEmail').val();
     let password = $('#inputPassword').val();
