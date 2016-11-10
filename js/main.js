@@ -8,6 +8,7 @@ let searchYear = "";
 let searchPage = "1";
 let currentPage = 0;
 let lastItem = 0;
+let infoSource = false;
 
 function createLogoutButton() {
   FbAPI.getUser(apiKeys, uid).then(function(userResponse) {
@@ -115,7 +116,10 @@ function createModal(movie) {
     html += `<p>IMDB Rating ${movie.imdbRating} out of 10</p>`;
     html += '</div>';
     html += '<div class="modal-footer" id="save-movie">';
-    html += `<button class="btn btn-success" id="${movie.imdbID}" data-dismiss="modal">Add</button></div>`;
+    if(!infoSource) {
+      html += `<button class="btn btn-success" id="${movie.imdbID}" data-dismiss="modal">Add</button></div>`;
+      infoSource = false;
+    }
     html += '</div>';  // content
     html += '</div>';  // dialog
     html += '</div>';  // footer
@@ -191,6 +195,7 @@ $(document).ready(function() {
   });
 
   $(document).on('click', '.movie-title', (e) => {
+    infoSource = true;
     let itemId = e.target.getAttribute("data-fbid");
     getSelectedMovie(itemId);
   });
