@@ -3,6 +3,11 @@
 let apiKeys = {};
 let uid = "";
 let movie = {};
+let searchText = "";
+let searchYear = "";
+let searchPage = "1";
+let currentPage = 0;
+let lastItem = 0;
 
 function createLogoutButton() {
   FbAPI.getUser(apiKeys, uid).then(function(userResponse) {
@@ -45,6 +50,30 @@ function getSelectedMovie(imdbID) {
         reject(errorResponse);
       });
   });
+}
+
+function putSearchedMoviesInDOM (movies, totalItems, startItem, endItem) {
+  $("#movie-result").html("");
+  let contentToDOM = "";
+  contentToDOM = `<h4>Total searched results found ${totalItems}, items displayed ${startItem}-${endItem}. <button class="btn btn-default" id="previous-page">Previous</button><button class="btn btn-default" id="next-page">Next</button></h4>`;
+  for (var i = 0; i < movies.length; i++){
+    if(movies[i].Poster === "N/A") {
+      movies[i].Poster = "img/no_image_available.jpg";
+    }
+    if (i % 3 === 0){
+      contentToDOM += '<div class="row">';
+    }
+        contentToDOM += '<div class="col-md-4">';
+          contentToDOM += `<h3 class="caption">${movies[i].Title}</h3>`;
+          contentToDOM += `<h5>${movies[i].Year}</h5>`;
+          contentToDOM += `<img width="144" height="192" src="${movies[i].Poster}">`;
+          contentToDOM += `<div class="more-detail"><button class="btn btn-default" id="${movies[i].imdbID}" data-toggle="modal" data-target="#myModal">More Details</button></div>`;
+        contentToDOM += '</div>';
+    if ((i - 2) % 3 === 0 || i === movies.length - 1){
+      contentToDOM += '</div>';
+    }
+  }
+  $("#movie-result").append(contentToDOM);
 }
 
 function putSavedMoviesInDOM() {
@@ -108,10 +137,8 @@ $(document).ready(function() {
   });
 
   $('#search-btn').on('click', () => {
-    $('#movie-result').html('');
-    let searchText = $('#search-title').val();
-    let searchYear = $('#search-year').val();
-    let searchPage = $('#search-page').val();
+    searchText = $('#search-title').val();
+    searchYear = $('#search-year').val();
     getSearchedMovie(searchText, searchYear, searchPage).then(function (searchedMovie) {
       $("#movie-result").html("");
       $("#movie-result").append(`<div>Total results found ${searchedMovie.totalResults}, Displayed 10 items per page.`);
@@ -122,6 +149,27 @@ $(document).ready(function() {
         $("#movie-result").append(`<div class="img"><h2 class="caption">${movie.Title}</h2><h4>${movie.Year}</h4><img width="300" height="450" src="${movie.Poster}""></div>`)
         .append(`<div><button class="btn btn-info" id="${movie.imdbID}" data-toggle="modal" data-target="#myModal">More Details</button></div>`);
       });
+      currentPage = 1;
+      lastItem = searchedMovie.totalResults;
+      putSearchedMoviesInDOM(searchedMovie.Search, searchedMovie.totalResults, (currentPage - 1) * 10 + 1, (lastItem >= currentPage * 10) ? currentPage * 10 : lastItem);
+    });
+  });
+
+  $("#movie-result").on('click', '#next-page', () => {
+    currentPage += 1;
+    if (currentPage >= Math.ceil(lastItem / 10) + 1) {currentPage = Math.ceil(lastItem / 10); return;}
+    getSearchedMovie(searchText, searchYear, (currentPage).toString()).then(function (searchedMovie) {
+      lastItem = searchedMovie.totalResults;
+      putSearchedMoviesInDOM(searchedMovie.Search, searchedMovie.totalResults, (currentPage - 1) * 10 + 1, (lastItem >= currentPage * 10) ? currentPage * 10 : lastItem);
+    });
+  });
+
+  $("#movie-result").on('click', '#previous-page', () => {
+    currentPage -= 1;
+    if (currentPage <= 0) {currentPage = 1; return;}
+    getSearchedMovie(searchText, searchYear, (currentPage).toString()).then(function (searchedMovie) {
+      lastItem = searchedMovie.totalResults;
+      putSearchedMoviesInDOM(searchedMovie.Search, searchedMovie.totalResults, ((currentPage - 1) >= 0) ? ((currentPage - 1) * 10 + 1) : 1, currentPage * 10);
     });
   });
 
