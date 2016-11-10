@@ -40,10 +40,16 @@ function getSelectedMovie(imdbID) {
         method:'GET',
         url:`http://www.omdbapi.com/?i=${imdbID}&plot=short&r=json`
       }).then((response)=>{
+        let Actors = "";
+        if(typeof response.Actors !== "string" && response.Actors !== undefined) {
+          Actors = response.Actors.split(",");
+        } else {
+          Actors = response.Actors;
+        }
         movie = {
           "name": response.Title,
           "year": response.Year,
-          "actors": response.Actors.split(","),
+          "actors": Actors,
           "rating": Math.round(parseFloat(response.imdbRating) / 2),
           "imdbID": response.imdbID
         };
@@ -70,7 +76,7 @@ function putSearchedMoviesInDOM (movies, totalItems, startItem, endItem) {
           contentToDOM += `<h3 class="caption">${movies[i].Title}</h3>`;
           contentToDOM += `<h5>${movies[i].Year}</h5>`;
           contentToDOM += `<img width="144" height="192" src="${movies[i].Poster}">`;
-          contentToDOM += `<div class="more-detail"><button class="btn btn-info" id="${movies[i].imdbID}" data-toggle="modal" data-target="#myModal">More Details</button></div>`;
+          contentToDOM += `<div class="more-detail"><button class="btn btn-info details" id="${movies[i].imdbID}" data-toggle="modal" data-target="#myModal">More Details</button></div>`;
         contentToDOM += '</div>';
     if ((i - 2) % 3 === 0 || i === movies.length - 1){
       contentToDOM += '</div>';
@@ -180,7 +186,7 @@ $(document).ready(function() {
   });
 
   // Get more details button
-  $("#movie-result").on('click', 'button', (movie) => {
+  $("#movie-result").on('click', '.details', (movie) => {
     getSelectedMovie(event.target.id).then(function(movie){
       movie.viewed = false;
       movie.uid = uid;
