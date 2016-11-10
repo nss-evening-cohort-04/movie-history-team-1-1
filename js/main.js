@@ -89,11 +89,16 @@ function putSavedMoviesInDOM() {
   FbAPI.getSavedMovies(apiKeys, uid).then(function(movies) {
     let savedMoviesHTML = movies.map((movie) => {
       let newMovieItem = `<li data-viewed="${movie.viewed}">`;
-      newMovieItem += `<div class="col-xs-8" data-fbid="${movie.id}">`;
+      newMovieItem += `<div class="col-xs-6" data-fbid="${movie.id}">`;
       newMovieItem += `<div class="movie-title" data-fbid="${movie.imdbID}">${movie.name}</div>`;
       newMovieItem += '</div>';
-      newMovieItem += '<div class="col-xs-4">';
-      newMovieItem += `<button class="btn btn-danger col-xs-6 delete" data-fbid="${movie.id}">Delete</button> `;
+      newMovieItem += '<div class="col-xs-6">';
+      newMovieItem += `<button class="btn btn-danger col-xs-6 delete" data-fbid="${movie.id}">Delete</button>`;
+      if(movie.viewed === false) {
+        newMovieItem += `<button class="btn btn-success col-xs-6 watched" data-fbid="${movie.id}" data-imdbId="${movie.imdbID}">Not Watched</button>`;
+      } else {
+        newMovieItem += `<button class="btn btn-warning col-xs-6 watched" data-fbid="${movie.id}">Watched</button>`;
+      }
       newMovieItem += '</div>';
       newMovieItem += '</li>';
       return newMovieItem;
@@ -159,7 +164,7 @@ $(document).ready(function() {
           movie.Poster = "img/no_image_available.jpg";
         }
         $("#movie-result").append(`<div class="img"><h2 class="caption">${movie.Title}</h2><h4>${movie.Year}</h4><img width="300" height="450" src="${movie.Poster}""></div>`)
-        .append(`<div><button class="btn btn-info" id="${movie.imdbID}" data-toggle="modal" data-target="#myModal">More Details</button></div>`);
+        .append(`<div><button class="btn btn-info" id="${movie.imdbID}">More Details</button></div>`);
       });
       currentPage = 1;
       lastItem = searchedMovie.totalResults;
@@ -206,13 +211,32 @@ $(document).ready(function() {
     getSelectedMovie(itemId);
   });
 
-
+  // Delete movie
   $("ul").on('click', '.delete', function() {
     let itemId = $(this).data("fbid");
     FbAPI.deleteMovie(apiKeys, itemId).then(function() {
       putSavedMoviesInDOM();
     });
   });
+
+  // watched/unwatched movie
+  $("ul").on('click', '.watched', function() {
+
+    let itemId = $(this).data("fbid");
+    let imdbId = $(this).data("imdbid");
+
+    FbAPI.getMovie(apiKeys, itemId).then((movie) => {
+      if(movie.viewed) {
+        movie.viewed = false;
+      } else {
+        movie.viewed = true;
+      }
+      FbAPI.editMovie(apiKeys, itemId, movie).then(function() {
+        putSavedMoviesInDOM();
+      });
+    });
+  });
+
 
   $("ul").on('click', '.edit', function() {
     let itemId = $(this).data("fbid");

@@ -28,7 +28,6 @@ var FbAPI = (function (oldFirebase) {
         data: JSON.stringify(newMovie),
         dataType: 'json'
       }).then((response)=>{
-        console.log("response from POST", response);
         resolve(response);
       }, (error) => {
         console.log(error);
@@ -42,7 +41,6 @@ var FbAPI = (function (oldFirebase) {
         method:'DELETE',
         url:`${apiKeys.databaseURL}/movies/${itemId}.json`
       }).then((response)=>{
-        console.log("response from DELETE", response);
         resolve(response);
       }, (error) => {
         console.log(error);
@@ -56,7 +54,6 @@ var FbAPI = (function (oldFirebase) {
         method:'GET',
         url:`${apiKeys.databaseURL}/movies/${itemId}.json`
       }).then((response)=>{
-        console.log("response", response);
         resolve(response);
       }, (error) => {
         console.log(error);
@@ -72,7 +69,6 @@ var FbAPI = (function (oldFirebase) {
         data: JSON.stringify(editedMovie),
         dataType: 'json'
       }).then((response)=>{
-        console.log("response from PUT", response);
         resolve(response);
       }, (error) => {
         console.log(error);
