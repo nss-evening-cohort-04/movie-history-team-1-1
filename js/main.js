@@ -24,7 +24,6 @@ function getSearchedMovie(searchText, searchYear, searchPage) {
         method:'GET',
         url:`http://www.omdbapi.com/?s=${searchText}&type=movie&y=${searchYear}&plot=short&r=json&page=${searchPage}`
       }).then((response)=>{
-        console.log("response", response);
         resolve(response);
       },(errorResponse)=>{
         reject(errorResponse);
@@ -75,17 +74,16 @@ function putSearchedMoviesInDOM (movies, totalItems, startItem, endItem) {
     }
   }
   $("#movie-result").append(contentToDOM);
-} 
+}
 
 function putSavedMoviesInDOM() {
   FbAPI.getSavedMovies(apiKeys, uid).then(function(movies) {
     let savedMoviesHTML = movies.map((movie) => {
       let newMovieItem = `<li data-viewed="${movie.viewed}">`;
       newMovieItem += `<div class="col-xs-8" data-fbid="${movie.id}">`;
-      newMovieItem += `<label>${movie.name}</label>`;
+      newMovieItem += `<div class="movie-title" data-fbid="${movie.imdbID}">${movie.name}</div>`;
       newMovieItem += '</div>';
       newMovieItem += '<div class="col-xs-4">';
-      newMovieItem += `<button class="btn btn-default col-xs-6 edit" data-fbid="${movie.id}">Edit</button>`;
       newMovieItem += `<button class="btn btn-danger col-xs-6 delete" data-fbid="${movie.id}">Delete</button> `;
       newMovieItem += '</div>';
       newMovieItem += '</li>';
@@ -115,7 +113,7 @@ function createModal(movie) {
     html += `<p>IMDB Rating ${movie.imdbRating} out of 10</p>`;
     html += '</div>';
     html += '<div class="modal-footer" id="save-movie">';
-    html += `<button id="${movie.imdbID}" data-dismiss="modal">Add</button></div>`;
+    html += `<button class="btn btn-success" id="${movie.imdbID}" data-dismiss="modal">Add</button></div>`;
     html += '</div>';  // content
     html += '</div>';  // dialog
     html += '</div>';  // footer
@@ -124,7 +122,7 @@ function createModal(movie) {
     $("#dynamicModal").modal();
     $("#dynamicModal").modal('show');
 
-    $('#dynamicModal').on('hidden.bs.modal', function (e) {
+    $('#dynamicModal').on('hidden.bs.modal', function () {
         $(this).remove();
     });
 
@@ -142,6 +140,15 @@ $(document).ready(function() {
     searchText = $('#search-title').val();
     searchYear = $('#search-year').val();
     getSearchedMovie(searchText, searchYear, searchPage).then(function (searchedMovie) {
+      $("#movie-result").html("");
+      $("#movie-result").append(`<div>Total results found ${searchedMovie.totalResults}, Displayed 10 items per page.`);
+      searchedMovie.Search.forEach(function(movie, index){
+        if(movie.Poster === "N/A") {
+          movie.Poster = "img/no_image_available.jpg";
+        }
+        $("#movie-result").append(`<div class="img"><h2 class="caption">${movie.Title}</h2><h4>${movie.Year}</h4><img width="300" height="450" src="${movie.Poster}""></div>`)
+        .append(`<div><button class="btn btn-info" id="${movie.imdbID}" data-toggle="modal" data-target="#myModal">More Details</button></div>`);
+      });
       currentPage = 1;
       lastItem = searchedMovie.totalResults;
       putSearchedMoviesInDOM(searchedMovie.Search, searchedMovie.totalResults, (currentPage - 1) * 10 + 1, (lastItem >= currentPage * 10) ? currentPage * 10 : lastItem);
@@ -171,7 +178,6 @@ $(document).ready(function() {
     getSelectedMovie(event.target.id).then(function(movie){
       movie.viewed = false;
       movie.uid = uid;
-      // FbAPI.addMovie(apiKeys, movie);
     });
   });
 
@@ -181,6 +187,12 @@ $(document).ready(function() {
     FbAPI.addMovie(apiKeys, movie);
     FbAPI.getSavedMovies(apiKeys, uid).then(() => putSavedMoviesInDOM());
   });
+
+  $(document).on('click', '.movie-title', (e) => {
+    let itemId = e.target.getAttribute("data-fbid");
+    getSelectedMovie(itemId);
+  });
+
 
   $("ul").on('click', '.delete', function() {
     let itemId = $(this).data("fbid");
@@ -211,6 +223,7 @@ $(document).ready(function() {
   //Slide Out View
   $('.cd-btn').on('click', function(event){
     event.preventDefault();
+    putSavedMoviesInDOM();
     $('.cd-panel').addClass('is-visible');
   });
   //clode the lateral panel
@@ -245,7 +258,6 @@ $(document).ready(function() {
 
     });
   });
-
 
   $('#loginButton').on('click', function() {
     let email = $('#inputEmail').val();

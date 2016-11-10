@@ -24,6 +24,7 @@ body {
   font-family : "Droid Sans",
                 sans-serif;
   font-size   : 1.5em;
+  text-align: center;
 }
 
 a {
@@ -31,10 +32,13 @@ a {
   text-decoration : none;
 }
 
+.btn-info {
+  margin-top: .5em;
+}
 // style for cards
 
 
-h4 {
+#movie-result h4 {
   text-align: center;
   border-top: 1px solid black;
 }
@@ -42,6 +46,3 @@ h4 {
 .more-detail {
   text-align: right;
 }
-
-
-

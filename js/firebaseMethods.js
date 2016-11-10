@@ -50,6 +50,20 @@ var FbAPI = (function (oldFirebase) {
     });
   };
 
+  oldFirebase.getMovie = function (apiKeys, itemId) {
+    return new Promise((resolve, reject) => {
+      $.ajax({
+        method:'GET',
+        url:`${apiKeys.databaseURL}/movies/${itemId}.json`
+      }).then((response)=>{
+        console.log("response", response);
+        resolve(response);
+      }, (error) => {
+        console.log(error);
+      });
+    });
+  };
+
   oldFirebase.editMovie = function (apiKeys, itemId, editedMovie) {
     return new Promise((resolve, reject) => {
       $.ajax({

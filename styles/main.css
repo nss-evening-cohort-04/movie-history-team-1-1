@@ -338,13 +338,17 @@ body {
   color: black;
   background: #FFF;
   font-family: "Droid Sans", sans-serif;
-  font-size: 1.5em; }
+  font-size: 1.5em;
+  text-align: center; }
 
 a {
   color: #89ba2c;
   text-decoration: none; }
 
-h4 {
+.btn-info {
+  margin-top: .5em; }
+
+#movie-result h4 {
   text-align: center;
   border-top: 1px solid black; }
 
