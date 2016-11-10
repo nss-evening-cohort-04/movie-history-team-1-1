@@ -75,8 +75,8 @@ function putSearchedMoviesInDOM (movies, totalItems, startItem, endItem) {
         contentToDOM += '<div class="col-md-4">';
           contentToDOM += `<h3 class="caption">${movies[i].Title}</h3>`;
           contentToDOM += `<h5>${movies[i].Year}</h5>`;
-          contentToDOM += `<img width="144" height="192" src="${movies[i].Poster}">`;
-          contentToDOM += `<div class="more-detail"><button class="btn btn-info details" id="${movies[i].imdbID}" data-toggle="modal" data-target="#myModal">More Details</button></div>`;
+          contentToDOM += `<img width="144" height="192" class="details"id="${movies[i].imdbID}" data-toggle="modal" data-target="#myModal" src="${movies[i].Poster}">`;
+          // contentToDOM += `<div class="more-detail"><button class="btn btn-info details" id="${movies[i].imdbID}" data-toggle="modal" data-target="#myModal">More Details</button></div>`;
         contentToDOM += '</div>';
     if ((i - 2) % 3 === 0 || i === movies.length - 1){
       contentToDOM += '</div>';
@@ -94,7 +94,7 @@ function putSavedMoviesInDOM() {
       newMovieItem += '</div>';
       newMovieItem += '<div class="col-xs-6">';
       newMovieItem += `<button class="btn btn-danger col-xs-6 delete" data-fbid="${movie.id}">Delete</button>`;
-      if(movie.viewed === false) {
+      if(!movie.viewed) {
         newMovieItem += `<button class="btn btn-success col-xs-6 watched" data-fbid="${movie.id}" data-imdbId="${movie.imdbID}">Not Watched</button>`;
       } else {
         newMovieItem += `<button class="btn btn-warning col-xs-6 watched" data-fbid="${movie.id}">Watched</button>`;
@@ -107,10 +107,13 @@ function putSavedMoviesInDOM() {
   });
 }
 
+
 function createModal(movie) {
+    // This looks better than N/A
     if(movie.Poster === "N/A") {
       movie.Poster = "img/no_image_available.jpg";
     }
+
     let html =  '<div id="dynamicModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true">';
     html += '<div class="modal-dialog">';
     html += '<div class="modal-content">';
@@ -119,7 +122,7 @@ function createModal(movie) {
     html += `<h2>${movie.Title}</h2>`;
     html += '</div>';
     html += '<div class="modal-body">';
-    html += `<img src="${movie.Poster}" width="300px" height="250px"></img>`;
+    html += `<img src="${movie.Poster}" width="200px" height="300px"></img>`;
     html += `<h3>Release Date ${movie.Year}</h3>`;
     html += `<h4>Awards: ${movie.Awards}</h4>`;
     html += `<h5><strong>Notable Actors</strong> ${movie.Actors}</h5>`;
@@ -128,7 +131,7 @@ function createModal(movie) {
     html += '</div>';
     html += '<div class="modal-footer" id="save-movie">';
     if(!infoSource) {
-      html += `<button class="btn btn-success" id="${movie.imdbID}" data-dismiss="modal">Add</button></div>`;
+      html += `<button class="btn btn-success add-btn" id="${movie.imdbID}" data-dismiss="modal">Add</button></div>`;
       infoSource = false;
     }
     html += '</div>';  // content
@@ -163,8 +166,8 @@ $(document).ready(function() {
         if(movie.Poster === "N/A") {
           movie.Poster = "img/no_image_available.jpg";
         }
-        $("#movie-result").append(`<div class="img"><h2 class="caption">${movie.Title}</h2><h4>${movie.Year}</h4><img width="300" height="450" src="${movie.Poster}""></div>`)
-        .append(`<div><button class="btn btn-info" id="${movie.imdbID}">More Details</button></div>`);
+        $("#movie-result").append(`<div class="img"><h2 class="caption">${movie.Title}</h2><h4>${movie.Year}</h4><img width="300" height="450" src="${movie.Poster}""></div>`);
+        // .append(`<div><button class="btn btn-info" id="${movie.imdbID}">More Details</button></div>`);
       });
       currentPage = 1;
       lastItem = searchedMovie.totalResults;
@@ -224,7 +227,6 @@ $(document).ready(function() {
 
     let itemId = $(this).data("fbid");
     let imdbId = $(this).data("imdbid");
-
     FbAPI.getMovie(apiKeys, itemId).then((movie) => {
       if(movie.viewed) {
         movie.viewed = false;
