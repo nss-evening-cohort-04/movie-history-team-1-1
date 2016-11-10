@@ -75,8 +75,8 @@ function putSearchedMoviesInDOM (movies, totalItems, startItem, endItem) {
         contentToDOM += '<div class="col-md-4">';
           contentToDOM += `<h3 class="caption">${movies[i].Title}</h3>`;
           contentToDOM += `<h5>${movies[i].Year}</h5>`;
-          contentToDOM += `<img width="144" height="192" class="details"id="${movies[i].imdbID}" data-toggle="modal" data-target="#myModal" src="${movies[i].Poster}">`;
-          // contentToDOM += `<div class="more-detail"><button class="btn btn-info details" id="${movies[i].imdbID}" data-toggle="modal" data-target="#myModal">More Details</button></div>`;
+          contentToDOM += `<img width="144" height="192" src="${movies[i].Poster}">`;
+          contentToDOM += `<div class="more-detail"><button class="btn btn-info details" id="${movies[i].imdbID}" data-toggle="modal" data-target="#myModal">More Details</button></div>`;
         contentToDOM += '</div>';
     if ((i - 2) % 3 === 0 || i === movies.length - 1){
       contentToDOM += '</div>';
