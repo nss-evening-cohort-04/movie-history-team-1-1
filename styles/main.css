@@ -338,8 +338,12 @@ body {
   color: black;
   background: #FFF;
   font-family: "Droid Sans", sans-serif;
-  font-size: 1.5em; }
+  font-size: 1.5em;
+  text-align: center; }
 
 a {
   color: #89ba2c;
   text-decoration: none; }
+
+.btn-info {
+  margin-top: .5em; }
