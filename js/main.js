@@ -55,7 +55,7 @@ function getSelectedMovie(imdbID) {
 function putSearchedMoviesInDOM (movies, totalItems, startItem, endItem) {
   $("#movie-result").html("");
   let contentToDOM = "";
-  contentToDOM = `<h4>Total searched results found ${totalItems}, items displayed ${startItem}-${endItem}. <button class="btn btn-default" id="previous-page">Previous</button><button class="btn btn-default" id="next-page">Next</button></h4>`;
+  contentToDOM = `<h4>Total searched results found ${totalItems}, items displayed ${startItem}-${endItem}. <button class="btn btn-info" id="previous-page">Previous</button><button class="btn btn-info" id="next-page">Next</button></h4>`;
   for (var i = 0; i < movies.length; i++){
     if(movies[i].Poster === "N/A") {
       movies[i].Poster = "img/no_image_available.jpg";
@@ -67,7 +67,7 @@ function putSearchedMoviesInDOM (movies, totalItems, startItem, endItem) {
           contentToDOM += `<h3 class="caption">${movies[i].Title}</h3>`;
           contentToDOM += `<h5>${movies[i].Year}</h5>`;
           contentToDOM += `<img width="144" height="192" src="${movies[i].Poster}">`;
-          contentToDOM += `<div class="more-detail"><button class="btn btn-default" id="${movies[i].imdbID}" data-toggle="modal" data-target="#myModal">More Details</button></div>`;
+          contentToDOM += `<div class="more-detail"><button class="btn btn-info" id="${movies[i].imdbID}" data-toggle="modal" data-target="#myModal">More Details</button></div>`;
         contentToDOM += '</div>';
     if ((i - 2) % 3 === 0 || i === movies.length - 1){
       contentToDOM += '</div>';
@@ -102,14 +102,14 @@ function createModal(movie) {
     html += '<div class="modal-content">';
     html += '<div class="modal-header">';
     html += '<a class="close" data-dismiss="modal">×</a>';
-    html += `<h4>${movie.Title}</h4>`;
+    html += `<h2>${movie.Title}</h2>`;
     html += '</div>';
     html += '<div class="modal-body">';
-    html += `<h6>This movie was released in ${movie.Year}</h6>`;
-    html += `<img src="${movie.Poster}" width="150px" height="150px"></img>`;
-    html += `<h6>Awards: ${movie.Awards}</h6>`;
-    html += `<h6>Notable Actors ${movie.Actors}</h6>`;
-    html += `<p>Plot: ${movie.Plot}</p>`;
+    html += `<img src="${movie.Poster}" width="300px" height="250px"></img>`;
+    html += `<h3>Release Date ${movie.Year}</h3>`;
+    html += `<h4>Awards: ${movie.Awards}</h4>`;
+    html += `<h5><strong>Notable Actors</strong> ${movie.Actors}</h5>`;
+    html += `<p><strong>Plot:</strong> ${movie.Plot}</p>`;
     html += `<p>IMDB Rating ${movie.imdbRating} out of 10</p>`;
     html += '</div>';
     html += '<div class="modal-footer" id="save-movie">';

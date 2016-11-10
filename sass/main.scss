@@ -28,12 +28,13 @@ body {
 }
 
 a {
-  color           : #89ba2c;
-  text-decoration : none;
+    color: #89ba2c;
+    text-decoration: none;
 }
 
 .btn-info {
   margin-top: .5em;
+  margin-right: .25em;
 }
 // style for cards
 
@@ -44,5 +45,5 @@ a {
 }
 
 .more-detail {
-  text-align: right;
+  text-align: center;
 }

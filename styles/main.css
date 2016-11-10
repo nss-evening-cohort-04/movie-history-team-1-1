@@ -346,11 +346,12 @@ a {
   text-decoration: none; }
 
 .btn-info {
-  margin-top: .5em; }
+  margin-top: .5em;
+  margin-right: .25em; }
 
 #movie-result h4 {
   text-align: center;
   border-top: 1px solid black; }
 
 .more-detail {
-  text-align: right; }
+  text-align: center; }
