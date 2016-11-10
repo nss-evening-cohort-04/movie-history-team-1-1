@@ -282,6 +282,9 @@ $(document).ready(function() {
     e.preventDefault();
     FbAPI.logoutUser();
     uid = "";
+    $('#search-year').val('');
+    $('#search-title').val('');
+    $('#movie-result').html('');
     $('#inputEmail').val('');
     $('#inputPassword').val('');
     $('#inputUsername').val('');
