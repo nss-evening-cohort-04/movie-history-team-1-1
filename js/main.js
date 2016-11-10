@@ -166,8 +166,8 @@ $(document).ready(function() {
         if(movie.Poster === "N/A") {
           movie.Poster = "img/no_image_available.jpg";
         }
-        $("#movie-result").append(`<div class="img"><h2 class="caption">${movie.Title}</h2><h4>${movie.Year}</h4><img width="300" height="450" src="${movie.Poster}""></div>`);
-        // .append(`<div><button class="btn btn-info" id="${movie.imdbID}">More Details</button></div>`);
+        $("#movie-result").append(`<div class="img"><h2 class="caption">${movie.Title}</h2><h4>${movie.Year}</h4><img width="300" height="450" src="${movie.Poster}""></div>`)
+        .append(`<div><button class="btn btn-info" id="${movie.imdbID}">More Details</button></div>`);
       });
       currentPage = 1;
       lastItem = searchedMovie.totalResults;
