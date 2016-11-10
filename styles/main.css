@@ -337,9 +337,9 @@ html, body {
 body {
   color: black;
   background: #FFF;
+  text-align: center;
   font-family: "Droid Sans", sans-serif;
-  font-size: 1.5em;
-  text-align: center; }
+  font-size: 1.5em; }
 
 a {
   color: #89ba2c;
@@ -350,8 +350,8 @@ a {
   margin-right: .25em; }
 
 #movie-result h4 {
-  text-align: center;
-  border-top: 1px solid black; }
+  border-top: 1px solid black;
+  text-align: center; }
 
 .more-detail {
   text-align: center; }
@@ -361,6 +361,9 @@ a {
   padding-left: 0; }
   .cd-panel-content .col-xs-6 .movie-title {
     text-align: left; }
+    .cd-panel-content .col-xs-6 .movie-title:hover {
+      background-color: #c0c7cd;
+      cursor: pointer; }
 
 .modal-footer {
   text-align: center; }
