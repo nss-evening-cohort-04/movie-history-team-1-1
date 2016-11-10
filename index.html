@@ -10,13 +10,26 @@
   </head>
 
   <body class="center">
-    <nav class="navbar navbar-default">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          Movie History
-        </div>
-      </div>
-    </nav>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Movie History</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="" id="view-saved-movies-link" class="cd-btn hide">View Saved Movies</a>
+        </li>
+        <li id="logout-container"></li>
+      </ul>
+    </div>
+    <!-- /.navbar-collapse -->
+  </div>
+  <!-- /.container-fluid -->
+</nav>
+
     <div class="container col-xs-4 col-xs-offset-4" id="login-container">
       <h1 class="form-signin-heading">Login</h1>
       <input type="email" id="inputEmail" class="form-control" placeholder="Email address" value="a@a.com" required autofocus>
@@ -38,9 +51,6 @@
                 <label class="control-label" for="y">Year:</label>
                 <input type="text" id="search-year" class="input-small" style="width: 100px;"> &nbsp;&nbsp;
                 <button id="search-btn" type="button" class="btn-sm btn-primary">Search</button>
-              </div>
-              <div>
-                <a href="" id="view-saved-movies-link" class="cd-btn">View Saved Movies</a>
               </div>
             </div>
           </div>

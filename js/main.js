@@ -12,9 +12,11 @@ let lastItem = 0;
 function createLogoutButton() {
   FbAPI.getUser(apiKeys, uid).then(function(userResponse) {
     $('#logout-container').html('');
+    $('#logout-container').removeClass('hide');
     let currentUsername = userResponse.username;
-    let logoutButton = `<button class="btn btn-danger" id="logoutButton">Logout ${currentUsername}</button>`;
-    $('#logout-container').append(logoutButton);
+    let logoutLink = `<a href="" id="logoutLink">Logout ${currentUsername}</a>`;
+    $('#logout-container').append(logoutLink);
+    $('#view-saved-movies-link').removeClass('hide');
   });
 }
 
@@ -276,7 +278,8 @@ $(document).ready(function() {
     });
   });
 
-  $("#logout-container").on('click', '#logoutButton', function() {
+  $("#logout-container").on('click', '#logoutLink', function(e) {
+    e.preventDefault();
     FbAPI.logoutUser();
     uid = "";
     $('#inputEmail').val('');
@@ -284,5 +287,8 @@ $(document).ready(function() {
     $('#inputUsername').val('');
     $('#login-container').removeClass('hide');
     $('#movie-container').addClass('hide');
+    $('#view-saved-movies-link').addClass('hide');
+    $('#search').addClass('hide');
+    $('#logout-container').addClass('hide');
   });
 });
