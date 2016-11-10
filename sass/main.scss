@@ -47,3 +47,23 @@ a {
 .more-detail {
   text-align: center;
 }
+
+// This fixes a spacing issue in the side panel slideout
+.cd-panel-content .col-xs-6 {
+  padding-right: 3px;
+  padding-left: 0;
+
+  .movie-title {
+  text-align: left;
+  }
+}
+
+// this makes the modal prettier
+.modal-footer {
+  text-align: center;
+
+  .add-btn {
+    width: 50%;
+  }
+
+}
